@@ -20,7 +20,6 @@ struct Opt {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let opt = Opt::from_args();
-    println!("{:?}", opt);
     let res = core::diff_xlsx(
         opt.old_file_path,
         opt.new_file_path,
