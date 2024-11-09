@@ -7,6 +7,7 @@ use diff::DiffItem;
 use parse::CalamineWorkbook;
 use parse::{FileLike, SerializableData};
 use serde::Serialize;
+
 #[derive(Serialize)]
 struct ModifiedSheet {
     sheet_name: String,
@@ -38,10 +39,26 @@ pub fn diff_xlsx(
     raw_data: bool,
     // header_row: usize,
 ) -> Result<DiffResult, Box<dyn Error>> {
-    let mut modified_sheets: Vec<ModifiedSheet> = vec![];
-    // file path
     let wb_old: parse::CalamineWorkbook = parse::load_workbook(&FileLike::Path(old_file_path))?;
     let wb_new = parse::load_workbook(&FileLike::Path(new_file_path))?;
+    return build_diff(wb_old, wb_new, raw_data);
+}
+pub fn diff_xlsx_from_u8(
+    old_file: &[u8],
+    new_file: &[u8],
+    raw_data: bool,
+) -> Result<DiffResult, Box<dyn Error>> {
+    let wb_old: CalamineWorkbook = parse::load_workbook(&FileLike::Bytes(old_file.to_vec()))?;
+    let wb_new = parse::load_workbook(&FileLike::Bytes(new_file.to_vec()))?;
+    return build_diff(wb_old, wb_new, raw_data);
+}
+
+pub fn build_diff(
+    wb_old: CalamineWorkbook,
+    wb_new: CalamineWorkbook,
+    raw_data: bool,
+) -> Result<DiffResult, Box<dyn Error>> {
+    let mut modified_sheets: Vec<ModifiedSheet> = Vec::new();
     // find added and removed sheets
     let added_sheets: Vec<String> = wb_new
         .sheet_names

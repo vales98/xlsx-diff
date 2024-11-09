@@ -11,7 +11,7 @@
 - **cargo.toml**
 ```
 [dependencies]
-xlsx-diff = "0.1.0"
+xlsx-diff = "0.1.2"
 ```
 - **example**
 ```rust
