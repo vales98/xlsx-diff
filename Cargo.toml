@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/vales98/xlsx-diff"
+description = "a libray for comparing differences between two XLSX files"
 authors = ["vales98"]
 
 [dependencies]
