@@ -1,0 +1,13 @@
+{
+  "name": "xlsx-tool-wasm",
+  "version": "0.0.1",
+  "description": "a wasm module for comparing two xlsx files",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
