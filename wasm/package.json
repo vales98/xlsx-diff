@@ -2,6 +2,10 @@
   "name": "xlsx-tool-wasm",
   "version": "0.0.1",
   "description": "a wasm module for comparing two xlsx files",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vales98/xlsx-diff"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {
