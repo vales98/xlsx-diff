@@ -7,12 +7,18 @@
  * @returns {string}
  */
 export function diff(old_file: Uint8Array, new_file: Uint8Array, raw_data: boolean): string;
+/**
+ * @param {Uint8Array} file
+ * @returns {string}
+ */
+export function load_workbook(file: Uint8Array): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly diff: (a: number, b: number, c: number, d: number, e: number) => Array;
+  readonly load_workbook: (a: number, b: number) => Array;
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;

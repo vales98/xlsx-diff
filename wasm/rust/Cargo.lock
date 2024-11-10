@@ -533,9 +533,9 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "xlsx-diff"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "352c557aede0636921b73ebf24c4f869bf6318026d06af47f8d25748a121a337"
+checksum = "e62b4c2eff564fa2caccbb6edb0d8dc3fced63d4e3c427d17024d389e19dc9e2"
 dependencies = [
  "calamine",
  "serde",

@@ -8,6 +8,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node build.js"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "vales98",
+  "license": "MIT",
+  "keywords": [
+    "wasm",
+    "xlsx",
+    "compare",
+    "diff"
+  ],
+  "files": [
+    "index.js",
+    "env"
+  ]
 }
