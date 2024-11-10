@@ -33,12 +33,12 @@ impl Serialize for SerializableData {
 }
 
 type RowData = Vec<SerializableData>;
-type SheetData = Vec<RowData>;
-
+pub type SheetData = Vec<RowData>;
+pub type WorkbookData = HashMap<String, SheetData>;
 #[derive(serde::Serialize)]
 pub struct CalamineWorkbook {
     pub sheet_names: Vec<String>,
-    pub data: HashMap<String, SheetData>,
+    pub data: WorkbookData,
 }
 
 pub enum FileLike {

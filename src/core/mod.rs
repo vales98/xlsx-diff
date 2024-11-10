@@ -1,11 +1,10 @@
 use std::error::Error;
 use std::path::PathBuf;
 extern crate serde_json;
-mod diff;
-mod parse;
+pub mod diff;
+pub mod parse;
 use diff::DiffItem;
-use parse::CalamineWorkbook;
-use parse::{FileLike, SerializableData};
+use parse::{CalamineWorkbook, FileLike, SerializableData,WorkbookData};
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -14,16 +13,23 @@ struct ModifiedSheet {
     diff: Vec<DiffItem<Vec<SerializableData>>>,
 }
 #[derive(Serialize)]
+struct OriginWorkbookData {
+    sheet_names: Vec<String>,
+    data: Option<WorkbookData>
+}
+
+#[derive(Serialize)]
 struct OriginData {
-    old: CalamineWorkbook,
-    new: CalamineWorkbook,
+    old: OriginWorkbookData,
+    new: OriginWorkbookData,
 }
 #[derive(Serialize)]
 pub struct DiffResult {
     added_sheets: Vec<String>,
     removed_sheets: Vec<String>,
+    no_change_sheets: Vec<String>,
     modified_sheets: Vec<ModifiedSheet>,
-    data: Option<OriginData>,
+    data: OriginData
 }
 /**
  * Compare two xlsx files
@@ -59,6 +65,7 @@ pub fn build_diff(
     raw_data: bool,
 ) -> Result<DiffResult, Box<dyn Error>> {
     let mut modified_sheets: Vec<ModifiedSheet> = Vec::new();
+    let mut no_change_sheets: Vec<String> = Vec::new();
     // find added and removed sheets
     let added_sheets: Vec<String> = wb_new
         .sheet_names
@@ -72,30 +79,36 @@ pub fn build_diff(
         .filter(|sheet_name| !wb_new.sheet_names.contains(*sheet_name))
         .map(|sheet_name| sheet_name.to_string())
         .collect();
-    // find modified sheets
     for sheet_name in wb_old.sheet_names.iter() {
         if wb_new.sheet_names.contains(sheet_name) {
             let wb_old_first_sheet_data: &Vec<Vec<SerializableData>> =
                 wb_old.data.get(&sheet_name.to_string()).unwrap();
             let wb_new_first_sheet_data = wb_new.data.get(&sheet_name.to_string()).unwrap();
             let res = diff::myers_diff(&wb_old_first_sheet_data, &wb_new_first_sheet_data);
-            modified_sheets.push(ModifiedSheet {
-                sheet_name: sheet_name.to_string(),
-                diff: res,
-            });
+            if res.len() == 0 {
+                no_change_sheets.push(sheet_name.to_string());
+            } else {
+                modified_sheets.push(ModifiedSheet {
+                    sheet_name: sheet_name.to_string(),
+                    diff: res,
+                });
+            }
         }
     }
     return Ok(DiffResult {
         added_sheets,
         removed_sheets,
         modified_sheets,
-        data: if raw_data {
-            Some(OriginData {
-                old: wb_old,
-                new: wb_new,
-            })
-        } else {
-            None
-        },
+        no_change_sheets,
+        data: OriginData{
+            old: OriginWorkbookData{
+                sheet_names: wb_old.sheet_names,
+                data: if raw_data {Some(wb_old.data)} else {None}
+            },
+            new: OriginWorkbookData{
+                sheet_names: wb_new.sheet_names,
+                data: if raw_data {Some(wb_new.data)} else {None}
+            }
+        }
     });
 }
